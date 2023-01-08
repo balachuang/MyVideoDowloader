@@ -1,0 +1,6 @@
+/bin
+/obj
+/youtube-dl/*.*
+/.git
+/.vs
+*.log
