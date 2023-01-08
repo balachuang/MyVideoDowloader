@@ -1,0 +1,67 @@
+[youtube] Uk4kb5t9WuY: Downloading webpage
+[youtube] Uk4kb5t9WuY: Downloading player e5f6cbd5
+[download] Destination: 橘祭　2016-Uk4kb5t9WuY.mp4
+[download]   0.7% of 35.97MiB at 68.91KiB/s ETA 08:50
+
+[CCTV] VIDEbITP9Nx2Qiaitxxs0rUf221231: Downloading webpage
+[CCTV] c6a1a06bd2c04115886c9be0d6a2f17d: Downloading JSON metadata
+[CCTV] c6a1a06bd2c04115886c9be0d6a2f17d: Downloading m3u8 information
+[hlsnative] Downloading m3u8 manifest
+[hlsnative] Total fragments: 369
+[download] Destination: 《2022中国故事》 20221231-c6a1a06bd2c04115886c9be0d6a2f17d.mp4
+[download]   0.3% of ~681.10MiB at  1.46MiB/s ETA 14:56
+
+[generic] fufuly-cushion-lightony-robot-ces-2023-172023044: Requesting header
+WARNING: Falling back on generic information extractor.
+[generic] fufuly-cushion-lightony-robot-ces-2023-172023044: Downloading webpage
+[generic] fufuly-cushion-lightony-robot-ces-2023-172023044: Extracting information
+[download] Downloading playlist: 抱著這款 Fufuly 脈動枕就能減輕你的焦慮 - Engadget 中文版
+[generic] playlist 抱著這款 Fufuly 脈動枕就能減輕你的焦慮 - Engadget 中文版: Collected 1 video ids (downloading 1 of them)
+[download] Downloading video 1 of 1
+[youtube] Ti0G20QQKUc: Downloading webpage
+[download] Destination: Yukai Engineering's Fufuly at CES 2023 - This pulsating cushion can suppress your anxiety-Ti0G20QQKUc.mp4
+[download]   2.7% of 16.55MiB at 48.89KiB/s ETA 05:37
+
+[generic] zh-tw: Requesting header
+WARNING: Falling back on generic information extractor.
+[generic] zh-tw: Downloading webpage
+[generic] zh-tw: Extracting information
+ERROR: Unsupported URL: https://www.mycard520.com.tw/zh-tw
+
+[youtube:tab] WL: Downloading webpage
+[download] Downloading playlist: 稍後觀看
+[youtube:tab] playlist 稍後觀看: Downloading 1 videos
+[download] Downloading video 1 of 1
+[youtube] vxjQT9T5wKA: Downloading webpage
+[youtube] vxjQT9T5wKA: Marking watched
+[download] Resuming download at byte 19879430
+ERROR: unable to download video data: HTTP Error 403: Forbidden
+
+
+
+
+-- get source site name
+[youtube] Uk4kb5t9WuY: Downloading webpage
+[CCTV] VIDEbITP9Nx2Qiaitxxs0rUf221231: Downloading webpage
+[youtube] Ti0G20QQKUc: Downloading webpage
+
+-- get video name (-2 line)
+[download] Destination: 橘祭　2016-Uk4kb5t9WuY.mp4
+[download] Destination: 《2022中国故事》 20221231-c6a1a06bd2c04115886c9be0d6a2f17d.mp4
+[download] Destination: Yukai Engineering's Fufuly at CES 2023 - This pulsating cushion can suppress your anxiety-Ti0G20QQKUc.mp4
+
+-- get download status (last line)
+[download]   0.3% of ~681.10MiB at  1.46MiB/s ETA 14:56
+[download]   2.7% of 16.55MiB at 48.89KiB/s ETA 05:37
+[download]   2.7% of 16.55MiB at 48.89KiB/s ETA 05:37
+
+-- ERROR
+ERROR: Unsupported URL: https://www.mycard520.com.tw/zh-tw
+ERROR: unable to download video data: HTTP Error 403: Forbidden
+
+
+
+
+-- Q:
+1. 下戴時影片名稱不要有路徑 (因為有 download path 設定?)
+2. 改 list view 顏色
