@@ -16,6 +16,7 @@ using CefSharp.DevTools.CSS;
 
 namespace MyVideoDowloader
 {
+    // TODO: Add Log: https://www.ruyut.com/2021/10/serilog.html
     public partial class MainForm : Form
     {
         // for thread safety
@@ -58,7 +59,17 @@ namespace MyVideoDowloader
             short tCnt = short.Parse(ComBox_ThreadCount.Text);
             preDownloader = new PreDownloader(this);
             downloader = new Downloader(this, tCnt);
+
+            // resizing list views
             lstviewRenderer = new ListViewRenderer(this);
+            lstviewRenderer.resizeListView();
+            timer.Enabled = true;
+
+            // setup listview owner draw handlers
+            ListVw_Playlists.DrawColumnHeader += new DrawListViewColumnHeaderEventHandler((hdlr, ee) => ListViewRenderer.drawHeaderHandler(hdlr, ee));
+            ListVw_Videos.DrawColumnHeader    += new DrawListViewColumnHeaderEventHandler((hdlr, ee) => ListViewRenderer.drawHeaderHandler(hdlr, ee));
+            ListVw_Playlists.DrawItem += new DrawListViewItemEventHandler((hdlr, ee) => ListViewRenderer.drawItemHandler(hdlr, ee));
+            ListVw_Videos.DrawItem    += new DrawListViewItemEventHandler((hdlr, ee) => ListViewRenderer.drawItemHandler(hdlr, ee));
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -70,6 +81,11 @@ namespace MyVideoDowloader
             // leave config tab, save properties to file
             string propFile = Path.Combine(System.AppContext.BaseDirectory, @"properties.xml");
             propMgr.savePropertiesToFile(propFile);
+        }
+
+        private void MainForm_SizeChanged(object sender, EventArgs e)
+        {
+            if (lstviewRenderer != null) lstviewRenderer.resizeListView();
         }
 
         // ==============================================
@@ -87,10 +103,12 @@ namespace MyVideoDowloader
             }
             else
             {
-                PropWebsite selSite = propMgr.getCurrSite(selIdx - 1);
+                PropertiesOfWebsite selSite = propMgr.getCurrSite(selIdx - 1);
                 TxtBox_Url.Text = selSite.url;
                 browserMgr.navigateTo(selSite.url, selSite.cookiePath);
             }
+
+            if (lstviewRenderer != null) lstviewRenderer.resizeListView();
         }
 
         private void TxtBox_Url_KeyPress(object sender, KeyPressEventArgs e)
@@ -152,7 +170,8 @@ namespace MyVideoDowloader
                 TxtBox_SiteName.Text.Trim(),
                 TxtBox_SiteUrl.Text.Trim(),
                 TxtBox_SiteCompareString.Text.Trim(),
-                TxtBox_SiteCookiePath.Text.Trim()
+                TxtBox_SiteCookiePath.Text.Trim(),
+                ChkBox_RelativeCookiePath.Checked
             );
 
             if (isAdded)
@@ -183,12 +202,13 @@ namespace MyVideoDowloader
             else
             {
                 // get old item
-                PropWebsite currSite = propMgr.getCurrSite(currIdex - 1);
+                PropertiesOfWebsite currSite = propMgr.getCurrSite(currIdex - 1);
                 TxtBox_SiteName.ReadOnly = true;
                 TxtBox_SiteName.Text = currSite.name;
                 TxtBox_SiteUrl.Text = currSite.url;
                 TxtBox_SiteCompareString.Text = currSite.compareString;
                 TxtBox_SiteCookiePath.Text = currSite.cookiePath;
+                ChkBox_RelativeCookiePath.Checked = currSite.isRelativeCookiePath;
             }
         }
 
@@ -199,7 +219,7 @@ namespace MyVideoDowloader
             if (currIdex > 0)
             {
                 // update current setting
-                PropWebsite currSite = propMgr.getCurrSite(currIdex - 1);
+                PropertiesOfWebsite currSite = propMgr.getCurrSite(currIdex - 1);
                 currSite.url = TxtBox_SiteUrl.Text.Trim();
             }
         }
@@ -215,9 +235,13 @@ namespace MyVideoDowloader
 
             if (currIdex > 0)
             {
+                // check is relative
+                if (checkRelative(TxtBox_SiteCookiePath.Text, ChkBox_RelativeCookiePath.Checked)) return;
+
                 // update current setting
-                PropWebsite currSite = propMgr.getCurrSite(currIdex - 1);
+                PropertiesOfWebsite currSite = propMgr.getCurrSite(currIdex - 1);
                 currSite.cookiePath = TxtBox_SiteCookiePath.Text.Trim();
+                currSite.isRelativeCookiePath = ChkBox_RelativeCookiePath.Checked;
             }
         }
 
@@ -228,7 +252,7 @@ namespace MyVideoDowloader
             if (currIdex > 0)
             {
                 // update current setting
-                PropWebsite currSite = propMgr.getCurrSite(currIdex - 1);
+                PropertiesOfWebsite currSite = propMgr.getCurrSite(currIdex - 1);
                 currSite.compareString = TxtBox_SiteCompareString.Text.Trim();
             }
         }
@@ -238,6 +262,9 @@ namespace MyVideoDowloader
             // replace all \\
             string txt = TxtBox_YtdlPath.Text;
             if (txt.Contains("\\")) TxtBox_YtdlPath.Text = txt.Replace("\\", "/");
+
+            // check is relative
+            checkRelative(TxtBox_YtdlPath.Text, ChkBox_RelativeYtdlPath.Checked);
         }
 
         private void TxtBox_DownloadPath_TextChanged(object sender, EventArgs e)
@@ -245,6 +272,9 @@ namespace MyVideoDowloader
             // replace all \\
             string txt = TxtBox_DownloadPath.Text;
             if (txt.Contains("\\")) TxtBox_DownloadPath.Text = txt.Replace("\\", "/");
+
+            // check is relative
+            checkRelative(TxtBox_DownloadPath.Text, ChkBox_RetativeDownloadPath.Checked);
         }
 
         private void ComBox_ThreadCount_SelectedIndexChanged(object sender, EventArgs e)
@@ -252,13 +282,33 @@ namespace MyVideoDowloader
             Lbl_Alart.Visible = true;
         }
 
+        private bool checkRelative(string _txt, bool _isRelative)
+        {
+            if (_isRelative && !_txt.Trim().StartsWith("."))
+            {
+                MessageBox.Show("Relative Path should start with \"./\" or \"../\"");
+                return false;
+            }
+            return true;
+        }
+
         // ==============================================
-        // Update ListView in timer --> may be delete ???
+        // Update ListView in timer
         // ==============================================
 
         private void timer_Tick(object sender, EventArgs e)
         {
             lstviewRenderer.updateListView(playlists, videos);
+        }
+
+        private void ListVw_Videos_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            if (e.IsSelected)
+            {
+                string historyStr = "";
+                foreach (string his in videos[e.Item.Index].processHistory) historyStr += his + "\r\n";
+                MessageBox.Show(historyStr);
+            }
         }
     }
 }

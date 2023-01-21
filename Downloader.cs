@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace MyVideoDowloader
 {
+    // TODO: apply Relative path config in download
     internal class Downloader
     {
         private MainForm parentForm = null;
@@ -79,13 +80,14 @@ namespace MyVideoDowloader
                 }
 
                 // prepare output parameter
-                PropDownloader prop = parentForm.propMgr.getDownloadProperties();
+                PropertiesOfGlobal prop = parentForm.propMgr.getDownloadProperties();
                 string ytdlCommand = prop.ytdlExecPath;
                 string ytdlParam_Cookies = "--cookies ''" + currVideo.cookiePath + "''";
                 string ytdlParam_CustFmt = prop.custFormat.Equals(string.Empty) ? "" : "-f ''" + prop.custFormat + "''";
                 string ytdlParam_VideoUrl = currVideo.url;
 
-                bool isCreateSubFolder = prop.createSubFolder && (!prop.skipWatchLaterSubFolder || !currVideo.playlistName.Equals("稍後觀看"));
+                // TODO: playlist 是 NA 時有錯
+                bool isCreateSubFolder = prop.createSubFolder && (!prop.skipWatchLaterSubFolder || (!currVideo.playlistName.Equals("稍後觀看") && !currVideo.playlistName.Equals(String.Empty)));
                 string ytdlParam_Output = (isCreateSubFolder && currVideo.url.Contains("www.youtube.com")) ?
                     "''" + prop.downloadPath.TrimEnd("/\\".ToArray()) + "/%(playlist_title)s/%(title)s.%(ext)s''" :
                     "''" + prop.downloadPath.TrimEnd("/\\".ToArray()) + "/%(title)s.%(ext)s''";
@@ -128,11 +130,14 @@ namespace MyVideoDowloader
                     continue;
                 }
 
+                // TODO: 記錄所有輸出, 並在介面提供顥示的地方-- 除錯用
                 processes[processIdx].OutputDataReceived +=
                     (o, e) =>
                     {
                         if (e.Data != null)
                         {
+                            bool addToHis = true;
+
                             // get source site name
                             Match matchSource = Regex.Match(e.Data, "\\[(.+)\\]\\s+.+:\\s+Downloading webpage");
                             if (matchSource.Success)
@@ -148,10 +153,14 @@ namespace MyVideoDowloader
                             Match matchVideo = Regex.Match(e.Data, "\\[download\\]\\s+Destination:\\s+(.+)");
                             if (matchVideo.Success)
                             {
+                                // youtube-dl may display full download path,
+                                // remove path and keep file name only.
                                 Group g1 = matchVideo.Groups[1];
+                                string fullName = g1.ToString();
+                                int pos = fullName.LastIndexOf("\\");
                                 lock (parentForm.lockVideosObj)
                                 {
-                                    currVideo.name = g1.ToString();
+                                    currVideo.name = (pos >= 0) ? fullName.Substring(pos+1, fullName.Length-pos-1) : fullName;
                                 }
                             }
 
@@ -166,6 +175,9 @@ namespace MyVideoDowloader
                                     currVideo.progress = g1.ToString();
                                     currVideo.size = g2.ToString();
                                 }
+
+                                // don't record status change hostory
+                                addToHis = false;
                             }
 
                             // get ERROR...
@@ -186,6 +198,14 @@ namespace MyVideoDowloader
                                         currVideo.progress = "[Error] HTTP Error 403: Forbidden";
                                         currVideo.size = "N/A";
                                     }
+                                }
+                            }
+
+                            if (addToHis)
+                            {
+                                lock (parentForm.lockVideosObj)
+                                {
+                                    currVideo.processHistory.Add(e.Data);
                                 }
                             }
                         }

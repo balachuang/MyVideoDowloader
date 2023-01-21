@@ -18,7 +18,7 @@ namespace MyVideoDowloader
     public class PropertiesManager
     {
         private MainForm parentForm = null;
-        private List<PropDownloader> configs = null;
+        private List<PropertiesOfGlobal> configs = null;
 
         public PropertiesManager(MainForm _form)
         {
@@ -32,9 +32,9 @@ namespace MyVideoDowloader
             {
                 using (Stream fStream = new FileStream(propPath, FileMode.Open, FileAccess.Read))
                 {
-                    XmlSerializer xmlFormat = new XmlSerializer(typeof(List<PropDownloader>));
+                    XmlSerializer xmlFormat = new XmlSerializer(typeof(List<PropertiesOfGlobal>));
                     fStream.Position = 0;
-                    configs = (List<PropDownloader>)xmlFormat.Deserialize(fStream);
+                    configs = (List<PropertiesOfGlobal>)xmlFormat.Deserialize(fStream);
                 }
             }
             catch (Exception ex)
@@ -45,8 +45,8 @@ namespace MyVideoDowloader
             }
             if (configs == null)
             {
-                configs = new List<PropDownloader>();
-                configs.Add(new PropDownloader());
+                configs = new List<PropertiesOfGlobal>();
+                configs.Add(new PropertiesOfGlobal());
             }
 
             syncPropertiesAndGUI(true);
@@ -59,34 +59,35 @@ namespace MyVideoDowloader
             // set default properties by 序列化
             using (Stream fStream = new FileStream(propPath, FileMode.OpenOrCreate, FileAccess.Write))
             {
-                XmlSerializer xmlFormat = new XmlSerializer(typeof(List<PropDownloader>));
+                XmlSerializer xmlFormat = new XmlSerializer(typeof(List<PropertiesOfGlobal>));
                 xmlFormat.Serialize(fStream, configs);
             }
         }
 
-        public bool addNewSite(string _name, string _url, string _compStr, string _cookiePath)
+        public bool addNewSite(string _name, string _url, string _compStr, string _cookiePath, bool _isRelative)
         {
             // ToDo: check if duplicate
-            PropWebsite pWeb = new PropWebsite();
+            PropertiesOfWebsite pWeb = new PropertiesOfWebsite();
             pWeb.name = _name;
             pWeb.url = _url;
             pWeb.compareString = _compStr;
             pWeb.cookiePath = _cookiePath;
+            pWeb.isRelativeCookiePath = _isRelative;
 
             configs[0].websiteAry.Add(pWeb);
             return true;
         }
 
-        public PropWebsite getCurrSite(int idx)
+        public PropertiesOfWebsite getCurrSite(int idx)
         {
-            if (idx < 0) return new PropWebsite();
-            if (idx >= configs[0].websiteAry.Count) return new PropWebsite();
+            if (idx < 0) return new PropertiesOfWebsite();
+            if (idx >= configs[0].websiteAry.Count) return new PropertiesOfWebsite();
             return configs[0].websiteAry[idx];
         }
 
         private void syncPropertiesAndGUI(bool syncToGui)
         {
-            PropDownloader config = configs[0];
+            PropertiesOfGlobal config = configs[0];
 
             if (syncToGui)
             {
@@ -95,7 +96,7 @@ namespace MyVideoDowloader
                 parentForm.ComBox_WebSites.Items.Clear();
                 parentForm.ComBox_WebSitesConfig.Items.Add("[新增網站]");
                 parentForm.ComBox_WebSites.Items.Add("[手動輸入]");
-                foreach (PropWebsite site in config.websiteAry)
+                foreach (PropertiesOfWebsite site in config.websiteAry)
                 {
                     parentForm.ComBox_WebSitesConfig.Items.Add(site.name);
                     parentForm.ComBox_WebSites.Items.Add(site.name);
@@ -116,6 +117,8 @@ namespace MyVideoDowloader
                 parentForm.TxtBox_CustFormat.Text = config.custFormat;
 
                 // boolean
+                parentForm.ChkBox_RelativeYtdlPath.Checked = config.isRelativeYtdlExecPath;
+                parentForm.ChkBox_RetativeDownloadPath.Checked = config.isRelativeDownloadPath;
                 parentForm.ChkBox_CreateSubFolder.Checked = config.createSubFolder;
                 parentForm.ChkBox_SkipWatchLaterSubFolder.Checked = config.skipWatchLaterSubFolder;
                 parentForm.ChkBox_UseCustFormat.Checked = config.useCustFormat;
@@ -131,6 +134,8 @@ namespace MyVideoDowloader
                 config.custFormat = parentForm.TxtBox_CustFormat.Text;
 
                 // boolean
+                config.isRelativeYtdlExecPath = parentForm.ChkBox_RelativeYtdlPath.Checked;
+                config.isRelativeDownloadPath = parentForm.ChkBox_RetativeDownloadPath.Checked;
                 config.createSubFolder = parentForm.ChkBox_CreateSubFolder.Checked;
                 config.skipWatchLaterSubFolder = parentForm.ChkBox_SkipWatchLaterSubFolder.Checked;
                 config.useCustFormat = parentForm.ChkBox_UseCustFormat.Checked;
@@ -146,7 +151,7 @@ namespace MyVideoDowloader
             return -1;
         }
 
-        public PropDownloader getDownloadProperties()
+        public PropertiesOfGlobal getDownloadProperties()
         {
             return configs[0];
         }

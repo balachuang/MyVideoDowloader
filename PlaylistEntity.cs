@@ -11,7 +11,7 @@ namespace MyVideoDowloader
         public string name { get; set; }
         public string url { get; set; }
         public string cookiePath { get; set; }
-        public string status { get; set; }
+        public string status { get; set; } // for diaplay only
 
         public PlaylistEntity()
         {

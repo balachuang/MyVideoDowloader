@@ -1,7 +1,7 @@
+*.log
+/.git
 /bin
 /obj
 /youtube-dl/*.*
-/.git
-/.vs
 /packages
-*.log
+/resources

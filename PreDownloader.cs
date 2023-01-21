@@ -95,7 +95,7 @@ namespace MyVideoDowloader
 
                 if (currPlaylistIdx >= 0)
                 {
-                    PropDownloader prop = parentForm.propMgr.getDownloadProperties();
+                    PropertiesOfGlobal prop = parentForm.propMgr.getDownloadProperties();
 
                     // 1. get playlist name
                     string ytdlCommand = prop.ytdlExecPath;
@@ -166,19 +166,3 @@ namespace MyVideoDowloader
         }
     }
 }
-
-//// Delegation for parentForm call back
-//public delegate void updateVideoListDelegate(VideoEntity ve);
-//public delegate void updatePlaylistDelegate(PlaylistEntity pe);
-//
-//// Delegation for parentForm call back
-//public void updateVideoList(VideoEntity ve) { parentForm.videos.Add(ve); }
-//public void updatePlaylist(PlaylistEntity pe) { parentForm.playlists.Add(pe); }
-
-// 用 delegate 解決不同 thread 不能呼叫 form.control 的問題.
-//updatePlaylistDelegate delegater = new updatePlaylistDelegate(updatePlaylist);
-//parentForm.BeginInvoke(delegater, new Object[] { pe });
-
-// 用 delegate 解決不同 thread 不能呼叫 form.control 的問題.
-//updateVideoListDelegate delegater = new updateVideoListDelegate(updateVideoList);
-//parentForm.BeginInvoke(delegater, new Object[] { ve });

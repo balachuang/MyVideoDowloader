@@ -8,19 +8,18 @@ namespace MyVideoDowloader
 {
     public class VideoEntity
     {
-        public int siteIdx { get; set; } // for connect to playlist, youtube only
         public string name { get; set; }
         public string url { get; set; }
         public string cookiePath { get; set; }
-        public string status { get; set; } // ??
+        public string status { get; set; } // record current video status, for process judgment
         public string sourceSiteName { get; set; } // for display only
         public string playlistName { get; set; } // for creating download path
         public string size { get; set; }     // for GUI update
         public string progress { get; set; } // for GUI update
+        public List<string> processHistory = new List<string>();
 
         public VideoEntity()
         {
-            siteIdx = -1;
             name = string.Empty;
             url = string.Empty;
             cookiePath = string.Empty;

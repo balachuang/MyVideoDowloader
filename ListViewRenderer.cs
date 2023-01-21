@@ -15,6 +15,33 @@ namespace MyVideoDowloader
         private Dictionary<string, Color> statusBkColorTable = new Dictionary<string, Color>();
         private Dictionary<string, Color> statusTxColorTable = new Dictionary<string, Color>();
 
+        public static void drawHeaderHandler(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            // draw Back-color
+            using (SolidBrush backBrush = new SolidBrush(Color.Aqua))
+            {
+                e.Graphics.FillRectangle(backBrush, e.Bounds);
+            }
+
+            // draw Text
+            using (SolidBrush foreBrush = new SolidBrush(Color.Black))
+            {
+                // text align right for Size & Progress
+                StringFormat fmtRight = new StringFormat(StringFormatFlags.NoClip);
+                fmtRight.Alignment = StringAlignment.Near;
+                if (e.Header.TextAlign == HorizontalAlignment.Right) fmtRight.Alignment = StringAlignment.Far;
+                e.Graphics.DrawString(e.Header.Text, e.Font, foreBrush, e.Bounds, fmtRight);
+            }
+        }
+
+        public static void drawItemHandler(object sender, DrawListViewItemEventArgs e)
+        {
+            // TODO: add progress bar
+            // TODO: display unicode string, 解決亂碼問題
+            string name = e.Item.SubItems[1].Text;
+            e.DrawDefault = true;
+        }
+
         public ListViewRenderer(MainForm _form)
         {
             parentForm = _form;
@@ -45,6 +72,16 @@ namespace MyVideoDowloader
             updateListView_Video(_videos);
         }
 
+        public void resizeListView()
+        {
+            // resize listview
+            int w = parentForm.ListVw_Playlists.Width;
+            parentForm.ListVw_Playlists.Columns[2].Width = w - 520;
+
+            w = parentForm.ListVw_Videos.Width;
+            parentForm.ListVw_Videos.Columns[1].Width = w - 340;
+        }
+
         private void updateListView_Playlist(List<PlaylistEntity> _playlists)
         {
             // update item text
@@ -64,7 +101,7 @@ namespace MyVideoDowloader
                 {
                     // add new items
                     parentForm.ListVw_Playlists.Items.Add(new ListViewItem(_playlists[n].toSubItemInput(n)));
-                    foreach (ColumnHeader clhr in parentForm.ListVw_Playlists.Columns) clhr.Width = -1;
+                    //foreach (ColumnHeader clhr in parentForm.ListVw_Playlists.Columns) clhr.Width = -1;
                 }
             }
             if (parentForm.ListVw_Playlists.Items.Count > _playlists.Count)
@@ -102,7 +139,6 @@ namespace MyVideoDowloader
                 {
                     // add new items
                     parentForm.ListVw_Videos.Items.Add(new ListViewItem(_videos[n].toSubItemInput()));
-                    foreach (ColumnHeader clhr in parentForm.ListVw_Videos.Columns) clhr.Width = -1;
                 }
             }
             if (parentForm.ListVw_Videos.Items.Count > _videos.Count)
@@ -129,10 +165,11 @@ namespace MyVideoDowloader
 
         private void updateListViewItem(ListViewItem.ListViewSubItem lvsi, ColumnHeader clhr, string value)
         {
+            // don't resize
             if (!lvsi.Text.Equals(value))
             {
                 lvsi.Text = value;
-                clhr.Width = -1;
+                //clhr.Width = -1;
             }
         }
     }

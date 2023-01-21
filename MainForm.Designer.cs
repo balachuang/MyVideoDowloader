@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.ListVw_Videos = new System.Windows.Forms.ListView();
             this.vcol1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.vcol2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -53,6 +54,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.TbPg_Config = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.ChkBox_RetativeDownloadPath = new System.Windows.Forms.CheckBox();
+            this.ChkBox_RelativeYtdlPath = new System.Windows.Forms.CheckBox();
             this.Lbl_Alart = new System.Windows.Forms.Label();
             this.ComBox_ThreadCount = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -65,6 +68,7 @@
             this.TxtBox_YtdlPath = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ChkBox_RelativeCookiePath = new System.Windows.Forms.CheckBox();
             this.TxtBox_SiteCompareString = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.Btn_AddNewSite = new System.Windows.Forms.Button();
@@ -102,29 +106,33 @@
             this.ListVw_Videos.Location = new System.Drawing.Point(12, 155);
             this.ListVw_Videos.MultiSelect = false;
             this.ListVw_Videos.Name = "ListVw_Videos";
+            this.ListVw_Videos.OwnerDraw = true;
             this.ListVw_Videos.Size = new System.Drawing.Size(956, 298);
             this.ListVw_Videos.TabIndex = 3;
             this.ListVw_Videos.UseCompatibleStateImageBehavior = false;
             this.ListVw_Videos.View = System.Windows.Forms.View.Details;
+            this.ListVw_Videos.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.ListVw_Videos_ItemSelectionChanged);
             // 
             // vcol1
             // 
             this.vcol1.Text = "來源";
-            this.vcol1.Width = 200;
+            this.vcol1.Width = 130;
             // 
             // vcol2
             // 
             this.vcol2.Text = "影片名稱或網址";
-            this.vcol2.Width = 500;
+            this.vcol2.Width = 615;
             // 
             // vcol3
             // 
             this.vcol3.Text = "大小";
+            this.vcol3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.vcol3.Width = 100;
             // 
             // vcol4
             // 
             this.vcol4.Text = "進度";
+            this.vcol4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.vcol4.Width = 80;
             // 
             // TabCtl_Main
@@ -258,6 +266,7 @@
             this.ListVw_Playlists.Location = new System.Drawing.Point(12, 32);
             this.ListVw_Playlists.MultiSelect = false;
             this.ListVw_Playlists.Name = "ListVw_Playlists";
+            this.ListVw_Playlists.OwnerDraw = true;
             this.ListVw_Playlists.Size = new System.Drawing.Size(956, 93);
             this.ListVw_Playlists.TabIndex = 2;
             this.ListVw_Playlists.UseCompatibleStateImageBehavior = false;
@@ -266,22 +275,22 @@
             // col1
             // 
             this.col1.Text = "#";
-            this.col1.Width = 50;
+            this.col1.Width = 30;
             // 
             // col2
             // 
             this.col2.Text = "名稱";
-            this.col2.Width = 200;
+            this.col2.Width = 310;
             // 
             // col3
             // 
             this.col3.Text = "網址";
-            this.col3.Width = 300;
+            this.col3.Width = 486;
             // 
             // col4
             // 
-            this.col4.Text = "進度";
-            this.col4.Width = 100;
+            this.col4.Text = "狀態";
+            this.col4.Width = 150;
             // 
             // label4
             // 
@@ -316,6 +325,8 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.ChkBox_RetativeDownloadPath);
+            this.groupBox2.Controls.Add(this.ChkBox_RelativeYtdlPath);
             this.groupBox2.Controls.Add(this.Lbl_Alart);
             this.groupBox2.Controls.Add(this.ComBox_ThreadCount);
             this.groupBox2.Controls.Add(this.label11);
@@ -333,6 +344,28 @@
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "下載設定";
+            // 
+            // ChkBox_RetativeDownloadPath
+            // 
+            this.ChkBox_RetativeDownloadPath.AutoSize = true;
+            this.ChkBox_RetativeDownloadPath.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.ChkBox_RetativeDownloadPath.Location = new System.Drawing.Point(174, 61);
+            this.ChkBox_RetativeDownloadPath.Name = "ChkBox_RetativeDownloadPath";
+            this.ChkBox_RetativeDownloadPath.Size = new System.Drawing.Size(118, 23);
+            this.ChkBox_RetativeDownloadPath.TabIndex = 19;
+            this.ChkBox_RetativeDownloadPath.Text = "使用相對路徑";
+            this.ChkBox_RetativeDownloadPath.UseVisualStyleBackColor = true;
+            // 
+            // ChkBox_RelativeYtdlPath
+            // 
+            this.ChkBox_RelativeYtdlPath.AutoSize = true;
+            this.ChkBox_RelativeYtdlPath.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.ChkBox_RelativeYtdlPath.Location = new System.Drawing.Point(174, 28);
+            this.ChkBox_RelativeYtdlPath.Name = "ChkBox_RelativeYtdlPath";
+            this.ChkBox_RelativeYtdlPath.Size = new System.Drawing.Size(118, 23);
+            this.ChkBox_RelativeYtdlPath.TabIndex = 13;
+            this.ChkBox_RelativeYtdlPath.Text = "使用相對路徑";
+            this.ChkBox_RelativeYtdlPath.UseVisualStyleBackColor = true;
             // 
             // Lbl_Alart
             // 
@@ -415,9 +448,9 @@
             // 
             this.TxtBox_DownloadPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxtBox_DownloadPath.Location = new System.Drawing.Point(174, 59);
+            this.TxtBox_DownloadPath.Location = new System.Drawing.Point(298, 59);
             this.TxtBox_DownloadPath.Name = "TxtBox_DownloadPath";
-            this.TxtBox_DownloadPath.Size = new System.Drawing.Size(780, 27);
+            this.TxtBox_DownloadPath.Size = new System.Drawing.Size(656, 27);
             this.TxtBox_DownloadPath.TabIndex = 12;
             this.TxtBox_DownloadPath.TextChanged += new System.EventHandler(this.TxtBox_DownloadPath_TextChanged);
             // 
@@ -434,9 +467,9 @@
             // 
             this.TxtBox_YtdlPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxtBox_YtdlPath.Location = new System.Drawing.Point(174, 26);
+            this.TxtBox_YtdlPath.Location = new System.Drawing.Point(298, 26);
             this.TxtBox_YtdlPath.Name = "TxtBox_YtdlPath";
-            this.TxtBox_YtdlPath.Size = new System.Drawing.Size(780, 27);
+            this.TxtBox_YtdlPath.Size = new System.Drawing.Size(656, 27);
             this.TxtBox_YtdlPath.TabIndex = 10;
             this.TxtBox_YtdlPath.TextChanged += new System.EventHandler(this.TxtBox_YtdlPath_TextChanged);
             // 
@@ -453,6 +486,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.ChkBox_RelativeCookiePath);
             this.groupBox1.Controls.Add(this.TxtBox_SiteCompareString);
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.Btn_AddNewSite);
@@ -471,13 +505,24 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "來源網站設定";
             // 
+            // ChkBox_RelativeCookiePath
+            // 
+            this.ChkBox_RelativeCookiePath.AutoSize = true;
+            this.ChkBox_RelativeCookiePath.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.ChkBox_RelativeCookiePath.Location = new System.Drawing.Point(156, 168);
+            this.ChkBox_RelativeCookiePath.Name = "ChkBox_RelativeCookiePath";
+            this.ChkBox_RelativeCookiePath.Size = new System.Drawing.Size(118, 23);
+            this.ChkBox_RelativeCookiePath.TabIndex = 12;
+            this.ChkBox_RelativeCookiePath.Text = "使用相對路徑";
+            this.ChkBox_RelativeCookiePath.UseVisualStyleBackColor = true;
+            // 
             // TxtBox_SiteCompareString
             // 
             this.TxtBox_SiteCompareString.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxtBox_SiteCompareString.Location = new System.Drawing.Point(171, 133);
+            this.TxtBox_SiteCompareString.Location = new System.Drawing.Point(156, 133);
             this.TxtBox_SiteCompareString.Name = "TxtBox_SiteCompareString";
-            this.TxtBox_SiteCompareString.Size = new System.Drawing.Size(783, 27);
+            this.TxtBox_SiteCompareString.Size = new System.Drawing.Size(798, 27);
             this.TxtBox_SiteCompareString.TabIndex = 10;
             this.TxtBox_SiteCompareString.TextChanged += new System.EventHandler(this.TxtBox_SiteCompareString_TextChanged);
             // 
@@ -505,16 +550,16 @@
             // 
             this.TxtBox_SiteCookiePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.TxtBox_SiteCookiePath.Location = new System.Drawing.Point(163, 166);
+            this.TxtBox_SiteCookiePath.Location = new System.Drawing.Point(280, 166);
             this.TxtBox_SiteCookiePath.Name = "TxtBox_SiteCookiePath";
-            this.TxtBox_SiteCookiePath.Size = new System.Drawing.Size(791, 27);
+            this.TxtBox_SiteCookiePath.Size = new System.Drawing.Size(674, 27);
             this.TxtBox_SiteCookiePath.TabIndex = 7;
             this.TxtBox_SiteCookiePath.TextChanged += new System.EventHandler(this.TxtBox_SiteCookiePath_TextChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(36, 169);
+            this.label8.Location = new System.Drawing.Point(29, 169);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(121, 19);
             this.label8.TabIndex = 6;
@@ -581,7 +626,6 @@
             // 
             // timer
             // 
-            this.timer.Enabled = true;
             this.timer.Interval = 1000;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
@@ -592,6 +636,7 @@
             this.ClientSize = new System.Drawing.Size(984, 491);
             this.Controls.Add(this.TabCtl_Main);
             this.Font = new System.Drawing.Font("微軟正黑體", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MinimumSize = new System.Drawing.Size(1000, 530);
             this.Name = "MainForm";
@@ -600,6 +645,7 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.TabCtl_Main.ResumeLayout(false);
             this.TbPg_Browse.ResumeLayout(false);
             this.TbPg_Browse.PerformLayout();
@@ -664,6 +710,9 @@
         protected internal System.Windows.Forms.TextBox TxtBox_SiteCompareString;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.ColumnHeader col4;
+        protected internal System.Windows.Forms.CheckBox ChkBox_RetativeDownloadPath;
+        protected internal System.Windows.Forms.CheckBox ChkBox_RelativeYtdlPath;
+        protected internal System.Windows.Forms.CheckBox ChkBox_RelativeCookiePath;
     }
 }
 
